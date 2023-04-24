@@ -81,8 +81,10 @@ for filename in os.listdir(OUTPUT_DIR):
         if 'reviews.csv.gz' in file_path:
             pdreviews = pd.read_csv(file_path, compression='gzip')
 print('***************************************************************')
-# Wrap the DataFrame iterator with tqdm for displaying the progress bar
+#remove all null values
+pdreviews=pdreviews.dropna()
 if 'sentiment' not in pdreviews.columns:
+    # Wrap the DataFrame iterator with tqdm for displaying the progress bar
     tqdm.pandas(desc="Processing comments")
     pdreviews['sentiment']=pdreviews['comments'].progress_apply(lambda x: sentiment(x, sentiment_pipeline, tokenizer))
     pdreviews.to_csv(os.path.join(OUTPUT_DIR,'reviews.csv.gz'),compression='gzip')
